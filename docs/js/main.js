@@ -1,15 +1,6 @@
 // Global state
 let employees = [];
-const USD_TO_INR_RATE = 83; // Current approximate rate (you might want to use an API for real-time rates)
-
-// Authentication check
-const checkAuth = () => {
-    if (!localStorage.getItem('isAuthenticated')) {
-        window.location.href = '/login';
-        return false;
-    }
-    return true;
-};
+const USD_TO_INR_RATE = 83;
 
 // Utility functions
 const convertUSDtoINR = (usdAmount) => {
@@ -59,15 +50,9 @@ const getFromLocalStorage = (key) => {
     return data ? JSON.parse(data) : [];
 };
 
-// Load initial data
-employees = getFromLocalStorage('employees');
-updateEmployeeSelects();
-
 // Employee management
 document.getElementById('employeeForm').addEventListener('submit', (e) => {
     e.preventDefault();
-    if (!checkAuth()) return;
-    
     showLoading();
     
     const formData = {
@@ -75,7 +60,7 @@ document.getElementById('employeeForm').addEventListener('submit', (e) => {
         name: document.getElementById('name').value,
         email: document.getElementById('email').value,
         position: document.getElementById('position').value,
-        salary: convertUSDtoINR(parseFloat(document.getElementById('salary').value)) // Convert USD to INR
+        salary: convertUSDtoINR(parseFloat(document.getElementById('salary').value))
     };
 
     employees.push(formData);
@@ -98,7 +83,7 @@ document.getElementById('employeeForm').addEventListener('submit', (e) => {
 // Attendance management
 document.getElementById('attendanceForm').addEventListener('submit', (e) => {
     e.preventDefault();
-    if (!checkAuth()) return;
+    showLoading();
     
     const formData = {
         employeeId: document.getElementById('employeeSelect').value,
@@ -112,13 +97,12 @@ document.getElementById('attendanceForm').addEventListener('submit', (e) => {
     
     alert('Attendance marked successfully!');
     e.target.reset();
+    hideLoading();
 });
 
 // Payroll management
 document.getElementById('payrollForm').addEventListener('submit', (e) => {
     e.preventDefault();
-    if (!checkAuth()) return;
-    
     showLoading();
     
     const employeeId = document.getElementById('payrollEmployee').value;
@@ -129,7 +113,7 @@ document.getElementById('payrollForm').addEventListener('submit', (e) => {
         month: parseInt(document.getElementById('month').value),
         year: parseInt(document.getElementById('year').value),
         basicSalary: employee.salary,
-        deductions: convertUSDtoINR(parseFloat(document.getElementById('deductions').value)) // Convert USD to INR
+        deductions: convertUSDtoINR(parseFloat(document.getElementById('deductions').value))
     };
 
     let payroll = getFromLocalStorage('payroll');
@@ -152,6 +136,14 @@ document.getElementById('payrollForm').addEventListener('submit', (e) => {
     hideLoading();
 });
 
+// Initial setup
+document.addEventListener('DOMContentLoaded', () => {
+    employees = getFromLocalStorage('employees');
+    updateEmployeeSelects();
+    loadEmployees();
+    hideLoading();
+});
+
 // Load existing data
 const loadEmployees = () => {
     showLoading();
@@ -169,27 +161,3 @@ const loadEmployees = () => {
     });
     hideLoading();
 };
-
-// Add logout functionality
-const addLogoutButton = () => {
-    const nav = document.querySelector('nav');
-    const logoutBtn = document.createElement('button');
-    logoutBtn.className = 'nav-btn';
-    logoutBtn.textContent = 'Logout';
-    logoutBtn.onclick = () => {
-        localStorage.removeItem('isAuthenticated');
-        window.location.href = '/login';
-    };
-    nav.appendChild(logoutBtn);
-};
-
-// Initial setup
-document.addEventListener('DOMContentLoaded', () => {
-    if (!checkAuth()) return;
-    
-    employees = getFromLocalStorage('employees');
-    updateEmployeeSelects();
-    loadEmployees();
-    addLogoutButton();
-    hideLoading();
-});

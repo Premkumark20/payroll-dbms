@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <div class="loading-screen">
+        <div class="spinner"></div>
+    </div>
     <div class="container">
         <header>
             <h1>Payroll Management System</h1>
@@ -24,7 +27,7 @@
                     <input type="text" id="name" placeholder="Employee Name" required>
                     <input type="email" id="email" placeholder="Email" required>
                     <input type="text" id="position" placeholder="Position" required>
-                    <input type="number" id="salary" placeholder="Salary" required>
+                    <input type="number" id="salary" placeholder="Salary (USD)" required>
                     <button type="submit" class="btn-primary">Add Employee</button>
                 </form>
                 <div id="employeeList" class="data-grid"></div>
@@ -53,7 +56,7 @@
                     </select>
                     <input type="number" id="month" placeholder="Month (1-12)" min="1" max="12" required>
                     <input type="number" id="year" placeholder="Year" required>
-                    <input type="number" id="deductions" placeholder="Deductions" required>
+                    <input type="number" id="deductions" placeholder="Deductions (USD)" required>
                     <button type="submit" class="btn-primary">Generate Payroll</button>
                 </form>
                 <div id="payrollResult" class="data-grid"></div>

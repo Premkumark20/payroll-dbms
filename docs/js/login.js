@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Set authentication in localStorage
             localStorage.setItem('isAuthenticated', 'true');
             // Redirect to main page
-            window.location.href = '/';
+            window.location.href = 'index.html';
         } else {
             alert('Invalid credentials. Please try again.');
             document.querySelector('.loading-screen').classList.add('hidden');
