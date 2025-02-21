@@ -1,7 +1,36 @@
 // Global state
 let employees = [];
+const USD_TO_INR_RATE = 83; // Current approximate rate (you might want to use an API for real-time rates)
+
+// Authentication check
+const checkAuth = () => {
+    if (!localStorage.getItem('isAuthenticated')) {
+        window.location.href = '/login';
+        return false;
+    }
+    return true;
+};
 
 // Utility functions
+const convertUSDtoINR = (usdAmount) => {
+    return usdAmount * USD_TO_INR_RATE;
+};
+
+const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR'
+    }).format(amount);
+};
+
+const showLoading = () => {
+    document.querySelector('.loading-screen').classList.remove('hidden');
+};
+
+const hideLoading = () => {
+    document.querySelector('.loading-screen').classList.add('hidden');
+};
+
 const showSection = (sectionId) => {
     document.querySelectorAll('.section').forEach(section => {
         section.classList.add('hidden');
@@ -37,12 +66,16 @@ updateEmployeeSelects();
 // Employee management
 document.getElementById('employeeForm').addEventListener('submit', (e) => {
     e.preventDefault();
+    if (!checkAuth()) return;
+    
+    showLoading();
+    
     const formData = {
-        id: Date.now(), // Simple way to generate unique ID
+        id: Date.now(),
         name: document.getElementById('name').value,
         email: document.getElementById('email').value,
         position: document.getElementById('position').value,
-        salary: parseFloat(document.getElementById('salary').value)
+        salary: convertUSDtoINR(parseFloat(document.getElementById('salary').value)) // Convert USD to INR
     };
 
     employees.push(formData);
@@ -55,15 +88,18 @@ document.getElementById('employeeForm').addEventListener('submit', (e) => {
             <span>${formData.name}</span>
             <span>${formData.email}</span>
             <span>${formData.position}</span>
-            <span>$${formData.salary}</span>
+            <span>${formatCurrency(formData.salary)}</span>
         </div>
     `;
     e.target.reset();
+    hideLoading();
 });
 
 // Attendance management
 document.getElementById('attendanceForm').addEventListener('submit', (e) => {
     e.preventDefault();
+    if (!checkAuth()) return;
+    
     const formData = {
         employeeId: document.getElementById('employeeSelect').value,
         status: document.getElementById('status').value,
@@ -81,6 +117,10 @@ document.getElementById('attendanceForm').addEventListener('submit', (e) => {
 // Payroll management
 document.getElementById('payrollForm').addEventListener('submit', (e) => {
     e.preventDefault();
+    if (!checkAuth()) return;
+    
+    showLoading();
+    
     const employeeId = document.getElementById('payrollEmployee').value;
     const employee = employees.find(emp => emp.id == employeeId);
     
@@ -89,7 +129,7 @@ document.getElementById('payrollForm').addEventListener('submit', (e) => {
         month: parseInt(document.getElementById('month').value),
         year: parseInt(document.getElementById('year').value),
         basicSalary: employee.salary,
-        deductions: parseFloat(document.getElementById('deductions').value)
+        deductions: convertUSDtoINR(parseFloat(document.getElementById('deductions').value)) // Convert USD to INR
     };
 
     let payroll = getFromLocalStorage('payroll');
@@ -103,16 +143,18 @@ document.getElementById('payrollForm').addEventListener('submit', (e) => {
     payrollResult.innerHTML = `
         <div>
             <strong>Employee:</strong> ${employee.name}<br>
-            <strong>Basic Salary:</strong> $${formData.basicSalary}<br>
-            <strong>Deductions:</strong> $${formData.deductions}<br>
-            <strong>Net Salary:</strong> $${formData.basicSalary - formData.deductions}
+            <strong>Basic Salary:</strong> ${formatCurrency(formData.basicSalary)}<br>
+            <strong>Deductions:</strong> ${formatCurrency(formData.deductions)}<br>
+            <strong>Net Salary:</strong> ${formatCurrency(formData.basicSalary - formData.deductions)}
         </div>
     `;
     e.target.reset();
+    hideLoading();
 });
 
 // Load existing data
 const loadEmployees = () => {
+    showLoading();
     const employeeList = document.getElementById('employeeList');
     employeeList.innerHTML = '';
     employees.forEach(emp => {
@@ -121,11 +163,33 @@ const loadEmployees = () => {
                 <span>${emp.name}</span>
                 <span>${emp.email}</span>
                 <span>${emp.position}</span>
-                <span>$${emp.salary}</span>
+                <span>${formatCurrency(emp.salary)}</span>
             </div>
         `;
     });
+    hideLoading();
 };
 
-// Initial load
-loadEmployees();
+// Add logout functionality
+const addLogoutButton = () => {
+    const nav = document.querySelector('nav');
+    const logoutBtn = document.createElement('button');
+    logoutBtn.className = 'nav-btn';
+    logoutBtn.textContent = 'Logout';
+    logoutBtn.onclick = () => {
+        localStorage.removeItem('isAuthenticated');
+        window.location.href = '/login';
+    };
+    nav.appendChild(logoutBtn);
+};
+
+// Initial setup
+document.addEventListener('DOMContentLoaded', () => {
+    if (!checkAuth()) return;
+    
+    employees = getFromLocalStorage('employees');
+    updateEmployeeSelects();
+    loadEmployees();
+    addLogoutButton();
+    hideLoading();
+});

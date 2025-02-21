@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, jsonify, url_for
+from flask import Flask, render_template, request, jsonify, url_for, redirect, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
 
 app = Flask(__name__)
+app.secret_key = 'your-secret-key-here'  # Required for session management
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'payroll.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -34,12 +35,44 @@ class Payroll(db.Model):
     deductions = db.Column(db.Float)
     net_salary = db.Column(db.Float)
 
-# Routes
+# Authentication routes
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        if username == 'hr@company.name' and password == '123':
+            session['authenticated'] = True
+            return jsonify({'success': True})
+        return jsonify({'success': False, 'message': 'Invalid credentials'})
+    
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('authenticated', None)
+    return redirect(url_for('login'))
+
+# Middleware to check authentication
+def login_required(route_function):
+    def wrapper(*args, **kwargs):
+        if not session.get('authenticated'):
+            return redirect(url_for('login'))
+        return route_function(*args, **kwargs)
+    wrapper.__name__ = route_function.__name__
+    return wrapper
+
 @app.route('/')
+@login_required
 def index():
+    if not session.get('authenticated'):
+        return redirect(url_for('login'))
     return render_template('index.html')
 
+# API routes with authentication
 @app.route('/api/employees', methods=['GET', 'POST'])
+@login_required
 def handle_employees():
     if request.method == 'POST':
         data = request.json
@@ -63,6 +96,7 @@ def handle_employees():
     } for e in employees])
 
 @app.route('/api/attendance', methods=['POST'])
+@login_required
 def mark_attendance():
     data = request.json
     attendance = Attendance(
@@ -74,6 +108,7 @@ def mark_attendance():
     return jsonify({'message': 'Attendance marked successfully'})
 
 @app.route('/api/payroll/generate', methods=['POST'])
+@login_required
 def generate_payroll():
     data = request.json
     payroll = Payroll(

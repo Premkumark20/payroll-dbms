@@ -1,5 +1,6 @@
 // Global state
 let employees = [];
+const USD_TO_INR_RATE = 83;
 
 // Utility functions
 const showSection = (sectionId) => {
@@ -18,6 +19,31 @@ const updateEmployeeSelects = () => {
             select.innerHTML += `<option value="${emp.id}">${emp.name}</option>`;
         });
     });
+};
+
+const checkAuth = async () => {
+    try {
+        const response = await fetch('/');
+        if (response.redirected) {
+            window.location.href = '/login';
+            return false;
+        }
+        return true;
+    } catch (error) {
+        console.error('Auth check error:', error);
+        return false;
+    }
+};
+
+const convertUSDtoINR = (usdAmount) => {
+    return usdAmount * USD_TO_INR_RATE;
+};
+
+const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR'
+    }).format(amount);
 };
 
 // Employee management
@@ -61,7 +87,7 @@ const loadEmployees = async () => {
                     <span>${emp.name}</span>
                     <span>${emp.email}</span>
                     <span>${emp.position}</span>
-                    <span>$${emp.salary}</span>
+                    <span>${formatCurrency(convertUSDtoINR(emp.salary))}</span>
                 </div>
             `;
         });
@@ -123,9 +149,9 @@ document.getElementById('payrollForm').addEventListener('submit', async (e) => {
         payrollResult.innerHTML = `
             <div>
                 <strong>Employee:</strong> ${employee.name}<br>
-                <strong>Basic Salary:</strong> $${formData.basic_salary}<br>
-                <strong>Deductions:</strong> $${formData.deductions}<br>
-                <strong>Net Salary:</strong> $${formData.basic_salary - formData.deductions}
+                <strong>Basic Salary:</strong> ${formatCurrency(convertUSDtoINR(formData.basic_salary))}<br>
+                <strong>Deductions:</strong> ${formatCurrency(convertUSDtoINR(formData.deductions))}<br>
+                <strong>Net Salary:</strong> ${formatCurrency(convertUSDtoINR(formData.basic_salary - formData.deductions))}
             </div>
         `;
         e.target.reset();
@@ -134,5 +160,41 @@ document.getElementById('payrollForm').addEventListener('submit', async (e) => {
     }
 });
 
-// Initial load
-loadEmployees();
+// Add logout functionality
+const setupLogout = () => {
+    const nav = document.querySelector('nav');
+    const logoutBtn = document.createElement('button');
+    logoutBtn.className = 'nav-btn';
+    logoutBtn.textContent = 'Logout';
+    logoutBtn.onclick = async () => {
+        showLoading();
+        try {
+            await fetch('/logout');
+            window.location.href = '/login';
+        } catch (error) {
+            console.error('Logout error:', error);
+            hideLoading();
+        }
+    };
+    nav.appendChild(logoutBtn);
+};
+
+// Initial setup
+document.addEventListener('DOMContentLoaded', async () => {
+    if (!await checkAuth()) return;
+    
+    showLoading();
+    try {
+        // Load employees from API
+        const response = await fetch('/api/employees');
+        employees = await response.json();
+        
+        updateEmployeeSelects();
+        loadEmployees();
+        setupLogout();
+    } catch (error) {
+        console.error('Initialization error:', error);
+    } finally {
+        hideLoading();
+    }
+});
