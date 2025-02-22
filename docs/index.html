@@ -6,9 +6,9 @@
     <title>Payroll Management System</title>
     <link rel="stylesheet" href="css/style.css">
     <script>
-        // Check authentication before loading the page
+        // Immediate redirect if not authenticated
         if (!localStorage.getItem('isAuthenticated')) {
-            window.location.href = 'login.html';
+            window.location.replace('login.html');
         }
     </script>
 </head>

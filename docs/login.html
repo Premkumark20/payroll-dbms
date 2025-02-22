@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Payroll Management System</title>
     <link rel="stylesheet" href="css/style.css">
+    <script>
+        // Redirect to index if already authenticated
+        if (localStorage.getItem('isAuthenticated')) {
+            window.location.replace('index.html');
+        }
+    </script>
 </head>
 <body>
     <div class="loading-screen">
@@ -42,7 +48,7 @@
                 // Check credentials
                 if (username === 'hr@company.name' && password === '123') {
                     localStorage.setItem('isAuthenticated', 'true');
-                    window.location.href = 'index.html';
+                    window.location.replace('index.html');
                 } else {
                     alert('Invalid password. Please try again.');
                     document.getElementById('password').value = '';
