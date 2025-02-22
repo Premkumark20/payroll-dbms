@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payroll Management System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        // Immediate authentication check
+        if (!localStorage.getItem('isAuthenticated')) {
+            window.location.replace('login.html');
+        }
+    </script>
+</head>
+<body>
+    <div class="loading-screen">
+        <div class="spinner"></div>
+    </div>
+    <div class="container">
+        <header>
+            <h1>Payroll Management System</h1>
+            <button id="logoutBtn" class="btn-secondary">Logout</button>
+        </header>
+        
+        <div class="content">
+            <section id="employeeSection">
+                <h2>Employee Management</h2>
+                <form id="employeeForm" class="form-grid">
+                    <input type="text" id="name" placeholder="Employee Name" required>
+                    <input type="email" id="email" placeholder="Email" required>
+                    <input type="text" id="position" placeholder="Position" required>
+                    <div class="form-group">
+                        <label for="salary">Salary (INR)</label>
+                        <input type="number" id="salary" name="salary" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Add Employee</button>
+                </form>
+                <div id="employeeList" class="data-grid"></div>
+            </section>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html>
