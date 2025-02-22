@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payroll Management System</title>
     <link rel="stylesheet" href="css/style.css">
+    <script>
+        // Check authentication before loading the page
+        if (!localStorage.getItem('isAuthenticated')) {
+            window.location.href = 'login.html';
+        }
+    </script>
 </head>
 <body>
     <div class="loading-screen">
@@ -17,6 +23,7 @@
                 <button onclick="showSection('employees')" class="nav-btn">Employees</button>
                 <button onclick="showSection('attendance')" class="nav-btn">Attendance</button>
                 <button onclick="showSection('payroll')" class="nav-btn">Payroll</button>
+                <button id="logoutBtn" class="btn-secondary">Logout</button>
             </nav>
         </header>
 
@@ -27,8 +34,10 @@
                     <input type="text" id="name" placeholder="Employee Name" required>
                     <input type="email" id="email" placeholder="Email" required>
                     <input type="text" id="position" placeholder="Position" required>
-                    <label for="salary">Salary</label>
-                    <input type="number" id="salary" placeholder="Salary" required>
+                    <div class="form-group">
+                        <label for="salary">Salary (INR)</label>
+                        <input type="number" id="salary" name="salary" required>
+                    </div>
                     <button type="submit" class="btn-primary">Add Employee</button>
                 </form>
                 <div id="employeeList" class="data-grid"></div>

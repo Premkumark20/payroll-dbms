@@ -11,8 +11,8 @@ const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
         style: 'currency',
         currency: 'INR',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
     }).format(amount);
 };
 
@@ -62,7 +62,7 @@ document.getElementById('employeeForm').addEventListener('submit', (e) => {
         name: document.getElementById('name').value,
         email: document.getElementById('email').value,
         position: document.getElementById('position').value,
-        salary: convertUSDtoINR(parseFloat(document.getElementById('salary').value)),
+        salary: parseFloat(document.getElementById('salary').value), // Store directly in INR
         join_date: new Date().toISOString()
     };
 
@@ -117,7 +117,7 @@ document.getElementById('payrollForm').addEventListener('submit', (e) => {
         month: parseInt(document.getElementById('month').value),
         year: parseInt(document.getElementById('year').value),
         basicSalary: employee.salary,
-        deductions: convertUSDtoINR(parseFloat(document.getElementById('deductions').value))
+        deductions: parseFloat(document.getElementById('deductions').value) // Store directly in INR
     };
 
     let payroll = getFromLocalStorage('payroll');
