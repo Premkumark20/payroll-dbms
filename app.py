@@ -80,7 +80,7 @@ def handle_employees():
             name=data['name'],
             email=data['email'],
             position=data['position'],
-            salary=data['salary']
+            salary=float(data['salary'])  # Salary is now in INR
         )
         db.session.add(new_employee)
         db.session.commit()
@@ -92,7 +92,8 @@ def handle_employees():
         'name': e.name,
         'email': e.email,
         'position': e.position,
-        'salary': e.salary
+        'salary': e.salary,  # Return salary in INR
+        'join_date': e.join_date.strftime('%Y-%m-%d')
     } for e in employees])
 
 @app.route('/api/attendance', methods=['POST'])

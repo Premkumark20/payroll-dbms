@@ -10,7 +10,9 @@ const convertUSDtoINR = (usdAmount) => {
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
         style: 'currency',
-        currency: 'INR'
+        currency: 'INR',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
     }).format(amount);
 };
 
@@ -60,7 +62,8 @@ document.getElementById('employeeForm').addEventListener('submit', (e) => {
         name: document.getElementById('name').value,
         email: document.getElementById('email').value,
         position: document.getElementById('position').value,
-        salary: convertUSDtoINR(parseFloat(document.getElementById('salary').value))
+        salary: convertUSDtoINR(parseFloat(document.getElementById('salary').value)),
+        join_date: new Date().toISOString()
     };
 
     employees.push(formData);
@@ -74,6 +77,7 @@ document.getElementById('employeeForm').addEventListener('submit', (e) => {
             <span>${formData.email}</span>
             <span>${formData.position}</span>
             <span>${formatCurrency(formData.salary)}</span>
+            <span>${new Date(formData.join_date).toLocaleDateString()}</span>
         </div>
     `;
     e.target.reset();
@@ -148,16 +152,26 @@ document.addEventListener('DOMContentLoaded', () => {
 const loadEmployees = () => {
     showLoading();
     const employeeList = document.getElementById('employeeList');
-    employeeList.innerHTML = '';
+    employeeList.innerHTML = `
+        <div class="grid-header">
+            <span>Name</span>
+            <span>Email</span>
+            <span>Position</span>
+            <span>Salary (INR)</span>
+            <span>Join Date</span>
+        </div>
+    `;
     employees.forEach(emp => {
-        employeeList.innerHTML += `
-            <div>
-                <span>${emp.name}</span>
-                <span>${emp.email}</span>
-                <span>${emp.position}</span>
-                <span>${formatCurrency(emp.salary)}</span>
-            </div>
+        const row = document.createElement('div');
+        row.className = 'grid-row';
+        row.innerHTML = `
+            <span>${emp.name}</span>
+            <span>${emp.email}</span>
+            <span>${emp.position}</span>
+            <span>${formatCurrency(emp.salary)}</span>
+            <span>${new Date(emp.join_date).toLocaleDateString()}</span>
         `;
+        employeeList.appendChild(row);
     });
     hideLoading();
 };

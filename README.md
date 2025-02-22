@@ -1,118 +1,80 @@
-# Payroll Database Management System
+# Payroll Database Management System (PDMS)
 
-A comprehensive web-based Payroll Management System built with Python Flask, SQLite, and modern frontend technologies. The system handles employee management, attendance tracking, and payroll generation with a secure authentication system.
+A comprehensive web-based payroll management system with authentication and employee management features.
 
 ## Features
 
-### Authentication & Security
-- Secure login system
-- Session management
-- Protected routes
-- Default credentials:
-  - Username: hr@company.name
-  - Password: 123
+- Authentication System
+  - Login credentials: hr@company.name / 123
+  - Session-based authentication
+  - Protected routes
 
-### Employee Management
-- Add and view employees
-- Track employee details
-- Email and position management
-- Salary management in INR (auto-converted from USD inputs)
+- Employee Management
+  - Add and view employees
+  - Track employee details (name, email, position, salary)
+  - Salary in Indian Rupees (₹)
 
-### Attendance Management
-- Daily attendance tracking
-- Multiple status options (present, absent, half-day)
-- Historical attendance records
+- Attendance Management
+  - Mark daily attendance
+  - Multiple status options (present, absent, half-day)
+  - Store attendance records
 
-### Payroll Management
-- Automated payroll generation
-- Salary calculations in INR
-- Deduction management
-- Net salary computation
-- Monthly and yearly tracking
-
-### User Interface
-- Modern and responsive design
-- Loading animations
-- Interactive feedback
-- Currency formatting in Indian Rupee (₹)
-- Smooth transitions and animations
-
-## Technical Features
-- Flask backend with SQLite database
-- Session-based authentication
-- RESTful API endpoints
-- Client-side form validation
-- Responsive CSS design
-- Modern JavaScript with async/await
-- USD to INR currency conversion
+- Payroll Management
+  - Generate monthly payroll
+  - Calculate net salary
+  - Handle deductions
+  - All calculations in INR
 
 ## Setup Instructions
 
-### Prerequisites
-- Python 3.8 or higher
-- Git (for version control)
-- Web browser (Chrome/Firefox recommended)
-
-### Installation Steps
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/Sairam5566/PDMS.git
-   cd payroll_system
-   ```
+```bash
+git clone https://github.com/Sairam5566/PDMS.git
+cd PDMS
+```
 
 2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+pip install -r requirements.txt
+```
 
-3. Run the application:
-   ```bash
-   python app.py
-   ```
+3. Run the Flask application:
+```bash
+python app.py
+```
 
 4. Access the application:
-   - Open your browser and navigate to `http://localhost:5000`
-   - You will be redirected to the login page
-   - Use the default credentials:
-     - Username: hr@company.name
-     - Password: 123
+- Local Flask version: http://localhost:5000
+- GitHub Pages version: https://sairam5566.github.io/PDMS/
 
-## Usage Guide
+## Technologies Used
 
-### First Time Setup
-1. Log in using the default credentials
-2. Add employees with their details
-3. Start tracking attendance
-4. Generate payroll as needed
+- Backend: Python Flask
+- Database: SQLite
+- Frontend: HTML, CSS, JavaScript
+- Storage: Local Storage (GitHub Pages version)
 
-### Daily Operations
-1. Mark attendance for employees
-2. Update any employee details if needed
-3. Generate payroll at the end of the pay period
+## Default Credentials
 
-### Payroll Generation
-1. Select an employee
-2. Enter the month and year
-3. Add any deductions
-4. System will automatically:
-   - Convert USD amounts to INR
-   - Calculate net salary
-   - Display formatted results
+- Username: hr@company.name
+- Password: 123
 
-## Security Notes
-- Change the default credentials after first login
-- The system uses session-based authentication
-- All routes are protected
-- Automatic logout on session expiry
+## Project Structure
 
-## Currency Handling
-- All salary inputs are in USD
-- System automatically converts to INR (current rate: 1 USD = 83 INR)
-- All displays are formatted in Indian currency format
-- Supports proper decimal handling
+```
+PDMS/
+├── app.py              # Flask application
+├── payroll.db          # SQLite database
+├── requirements.txt    # Python dependencies
+├── static/            # Static files for Flask
+│   ├── css/
+│   └── js/
+├── templates/         # Flask HTML templates
+└── docs/             # GitHub Pages version
+```
 
-## Support and Updates
-For issues and feature requests, please create an issue in the GitHub repository.
+## Notes
 
-## License
-This project is licensed under the MIT License - see the LICENSE file for details.
+- All salary values are in Indian Rupees (₹)
+- The GitHub Pages version uses local storage for data persistence
+- The Flask version uses SQLite for data storage

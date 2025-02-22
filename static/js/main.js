@@ -1,6 +1,5 @@
 // Global state
 let employees = [];
-const USD_TO_INR_RATE = 83;
 
 // Utility functions
 const showSection = (sectionId) => {
@@ -35,14 +34,12 @@ const checkAuth = async () => {
     }
 };
 
-const convertUSDtoINR = (usdAmount) => {
-    return usdAmount * USD_TO_INR_RATE;
-};
-
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
         style: 'currency',
-        currency: 'INR'
+        currency: 'INR',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
     }).format(amount);
 };
 
@@ -87,7 +84,7 @@ const loadEmployees = async () => {
                     <span>${emp.name}</span>
                     <span>${emp.email}</span>
                     <span>${emp.position}</span>
-                    <span>${formatCurrency(convertUSDtoINR(emp.salary))}</span>
+                    <span>${formatCurrency(emp.salary)}</span>
                 </div>
             `;
         });
@@ -149,9 +146,9 @@ document.getElementById('payrollForm').addEventListener('submit', async (e) => {
         payrollResult.innerHTML = `
             <div>
                 <strong>Employee:</strong> ${employee.name}<br>
-                <strong>Basic Salary:</strong> ${formatCurrency(convertUSDtoINR(formData.basic_salary))}<br>
-                <strong>Deductions:</strong> ${formatCurrency(convertUSDtoINR(formData.deductions))}<br>
-                <strong>Net Salary:</strong> ${formatCurrency(convertUSDtoINR(formData.basic_salary - formData.deductions))}
+                <strong>Basic Salary:</strong> ${formatCurrency(formData.basic_salary)}<br>
+                <strong>Deductions:</strong> ${formatCurrency(formData.deductions)}<br>
+                <strong>Net Salary:</strong> ${formatCurrency(formData.basic_salary - formData.deductions)}
             </div>
         `;
         e.target.reset();

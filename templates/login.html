@@ -15,10 +15,10 @@
             <h1>Login</h1>
             <form id="loginForm" class="form-grid">
                 <div class="form-group">
-                    <input type="email" id="username" name="username" placeholder="Email" required value="hr@company.name">
+                    <input type="email" id="username" name="username" placeholder="Email" required readonly value="hr@company.name">
                 </div>
                 <div class="form-group">
-                    <input type="password" id="password" name="password" placeholder="Password" required value="123">
+                    <input type="password" id="password" name="password" placeholder="Password" required autofocus>
                 </div>
                 <button type="submit" class="btn-primary">Login</button>
             </form>
@@ -26,42 +26,9 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Hide loading screen on initial load
             document.querySelector('.loading-screen').classList.add('hidden');
-
-            const loginForm = document.getElementById('loginForm');
-            
-            loginForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-
-                // Show loading
-                document.querySelector('.loading-screen').classList.remove('hidden');
-
-                try {
-                    const response = await fetch('/login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
-                    });
-
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        window.location.href = '/';
-                    } else {
-                        alert('Invalid credentials. Please try again.');
-                        document.querySelector('.loading-screen').classList.add('hidden');
-                    }
-                } catch (error) {
-                    console.error('Login error:', error);
-                    alert('An error occurred during login. Please try again.');
-                    document.querySelector('.loading-screen').classList.add('hidden');
-                }
-            });
+            // Focus on password field when page loads
+            document.getElementById('password').focus();
         });
     </script>
 </body>
