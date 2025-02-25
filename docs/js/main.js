@@ -149,14 +149,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Initial display
-    displayEmployees();
-
-    // Logout handler
+    // Logout functionality
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
+            // Clear authentication state
             localStorage.removeItem('isAuthenticated');
+            // Redirect to login page
             window.location.replace('login.html');
         });
     }

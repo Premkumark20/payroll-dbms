@@ -38,7 +38,7 @@
             align-items: center;
         }
         .employee-row {
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
         }
         .payroll-row {
             display: grid;
@@ -242,6 +242,29 @@
                 padding: 0.6rem 1.2rem;
             }
         }
+
+        .nav-button.logout-btn {
+            background-color: #ff4444;
+            color: white;
+            text-decoration: none;
+            margin-left: auto;
+        }
+        .nav-button.logout-btn:hover {
+            background-color: #cc0000;
+        }
+
+        .delete-btn {
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .delete-btn:hover {
+            background-color: #cc0000;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -262,9 +285,9 @@
                 <button onclick="showSection('payroll')" class="nav-button">
                     <i class="fas fa-money-bill-wave"></i> Payroll
                 </button>
-                <button onclick="clearAllData()" class="nav-button danger">
-                    <i class="fas fa-trash-alt"></i> Clear All Data
-                </button>
+                <a href="/logout" class="nav-button logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
             </nav>
         </header>
 

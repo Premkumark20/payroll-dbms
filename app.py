@@ -457,6 +457,26 @@ def get_payroll():
             'message': str(e)
         }), 500
 
+@app.route('/delete_employee/<int:employee_id>', methods=['DELETE'])
+@login_required
+def delete_employee(employee_id):
+    try:
+        # Delete related attendance records
+        Attendance.query.filter_by(employee_id=employee_id).delete()
+        
+        # Delete related payroll records
+        Payroll.query.filter_by(employee_id=employee_id).delete()
+        
+        # Delete the employee
+        employee = Employee.query.get_or_404(employee_id)
+        db.session.delete(employee)
+        db.session.commit()
+        
+        return jsonify({'success': True, 'message': 'Employee deleted successfully'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': str(e)}), 500
+
 @app.route('/clear_data', methods=['POST'])
 @login_required
 def clear_data():

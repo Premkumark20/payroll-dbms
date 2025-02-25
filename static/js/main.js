@@ -87,23 +87,70 @@ const loadEmployees = async () => {
         employees = data.employees;
         updateEmployeeSelects();
         
-        const employeeList = document.getElementById('employeeList');
-        employeeList.innerHTML = '';
-        employees.forEach(emp => {
-            employeeList.innerHTML += `
-                <div class="employee-row">
-                    <span>${emp.name}</span>
-                    <span>${emp.email}</span>
-                    <span>${emp.position}</span>
-                    <span>${formatCurrency(emp.salary)}</span>
-                </div>
-            `;
-        });
+        displayEmployees(employees);
     } catch (error) {
         console.error('Error loading employees:', error);
         alert('Error loading employees');
     }
 };
+
+function displayEmployees(employees) {
+    const employeeList = document.getElementById('employeeList');
+    employeeList.innerHTML = `
+        <div class="employee-row">
+            <strong>Name</strong>
+            <strong>Email</strong>
+            <strong>Position</strong>
+            <strong>Salary (INR)</strong>
+            <strong>Actions</strong>
+        </div>
+    `;
+    
+    employees.forEach(emp => {
+        const row = document.createElement('div');
+        row.className = 'employee-row';
+        row.innerHTML = `
+            <span>${emp.name}</span>
+            <span>${emp.email}</span>
+            <span>${emp.position}</span>
+            <span>${formatCurrency(emp.salary)}</span>
+            <span>
+                <button onclick="deleteEmployee(${emp.id})" class="delete-btn">
+                    <i class="fas fa-trash-alt"></i> Delete
+                </button>
+            </span>
+        `;
+        employeeList.appendChild(row);
+    });
+}
+
+async function deleteEmployee(employeeId) {
+    if (!confirm('Are you sure you want to delete this employee? This will also delete all related attendance and payroll records.')) {
+        return;
+    }
+
+    showLoading();
+    try {
+        const response = await fetch(`/delete_employee/${employeeId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+            // Refresh the employee list
+            loadEmployees();
+        } else {
+            alert('Error deleting employee: ' + data.message);
+        }
+    } catch (error) {
+        alert('Error deleting employee: ' + error.message);
+    } finally {
+        hideLoading();
+    }
+}
 
 // Attendance management
 document.getElementById('attendanceForm').addEventListener('submit', async (e) => {
