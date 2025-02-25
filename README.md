@@ -47,6 +47,26 @@ python app.py
 - Local Flask version: http://localhost:5000
 - GitHub Pages version: https://sairam5566.github.io/PDMS/
 
+## Deployment
+
+The application is configured to be deployed on PythonAnywhere or similar Python hosting platforms.
+
+### Deployment Steps:
+
+1. Create an account on PythonAnywhere
+2. Upload the code or clone from GitHub
+3. Create a virtual environment and install dependencies:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+4. Configure the web app on PythonAnywhere:
+   - Set the working directory to your project folder
+   - Set the WSGI configuration file to point to app.py
+   - Set the virtual environment path
+
 ## Technologies Used
 
 - Backend: Python Flask
