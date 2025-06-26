@@ -45,7 +45,7 @@ python app.py
 
 4. Access the application:
 - Local Flask version: http://localhost:5000
-- GitHub Pages version: https://premkumark20.github.io/payroll-dbms
+- GitHub Pages version: https://sairam5566.github.io/payroll-dbms
 
 ## Deployment
 
